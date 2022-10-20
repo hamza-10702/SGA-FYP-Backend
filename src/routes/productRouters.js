@@ -22,7 +22,7 @@ else{
 router.get("/product", async (request, response) => {
   try {
     const product = await Product.find();
-    response.status(404).json(product);
+    response.status(200).json(product);
   } catch (error) {
     response.status(400).json(error);
   }
