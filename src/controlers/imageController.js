@@ -13,65 +13,62 @@ class imageController {
         Message: "Image Didn't Find!",
       });
     } else {
-      const directory = path.resolve('src/images');
+      const options = {
+        method: "POST",
+        url: "https://pen-to-print-handwriting-ocr.p.rapidapi.com/recognize/",
+        headers: {
+          "content-type":
+            "multipart/form-data; boundary=---011000010111000001101001",
+          "X-RapidAPI-Key":
+            "40bee9d0fdmshf7baaadbddd5d59p15e1eejsn2e91990e5673",
+          "X-RapidAPI-Host": "pen-to-print-handwriting-ocr.p.rapidapi.com",
+          useQueryString: true,
+        },
+        formData: {
+          srcImg: {
+            value: fs.createReadStream(request.file.path),
+            options: {
+              filename: request.file.filename,
+              contentType: "application/octet-stream",
+            },
+          },
+          Session: "string",
+        },
+      };
 
-      console.log(directory)
-      fs.readdir(directory, (err, files) => {
-        if (err) throw err;
+      requests(options, function (error, res, body) {
+        try {
+          if (body) {
+            let objectBody = JSON.parse(body);
+            const value = objectBody.value.split("\n");
 
-        for (const file of files) {
-          fs.unlink(path.join(directory, file), (err) => {
+            response.status(200).send({
+              Status: "Success",
+              Message: value,
+            });
+          }
+          const directory = path.resolve("src/images");
+          fs.readdir(directory, (err, files) => {
             if (err) throw err;
+
+            for (const file of files) {
+              fs.unlink(path.join(directory, file), (err) => {
+                if (err) throw err;
+              });
+            }
           });
+        } catch (err) {
+          if (error) {
+            response.status(200).send({
+              Status: "Failed",
+              Error: error,
+            });
+          } else {
+            console.log(err);
+          }
         }
       });
     }
-    //  else {
-    //   const options = {
-    //     method: "POST",
-    //     url: "https://pen-to-print-handwriting-ocr.p.rapidapi.com/recognize/",
-    //     headers: {
-    //       "content-type":
-    //         "multipart/form-data; boundary=---011000010111000001101001",
-    //       "X-RapidAPI-Key":
-    //         "40bee9d0fdmshf7baaadbddd5d59p15e1eejsn2e91990e5673",
-    //       "X-RapidAPI-Host": "pen-to-print-handwriting-ocr.p.rapidapi.com",
-    //       useQueryString: true,
-    //     },
-    //     formData: {
-    //       srcImg: {
-    //         value: fs.createReadStream(request.file.path),
-    //         options: {
-    //           filename: request.file.filename,
-    //           contentType: "application/octet-stream",
-    //         },
-    //       },
-    //       Session: "string",
-    //     },
-    //   };
-
-    //   requests(options, function (error, res, body) {
-    //     try {
-    //       if (body) {
-    //         let objectBody = JSON.parse(body);
-    //         const value = objectBody.value.split("\n");
-
-    //         response.status(200).send({
-    //           Status: "Success",
-    //           Message: objectBody.value,
-    //         });
-    //       }
-
-    //     } catch (err) {
-    //       if (error) {
-    //         response.status(200).send({
-    //           Status: "Failed",
-    //           Error: error,
-    //         });
-    //       }
-    //     }
-    //   });
-    // }
   };
 
   // static scanImage = async (request, response) => {
