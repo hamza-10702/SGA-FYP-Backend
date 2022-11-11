@@ -2,7 +2,6 @@ const express = require("express");
 const router = new express.Router();
 const Product = require("../models/product");
 const mongoose = require("mongoose");
-const { response } = require("express");
 
 router.post("/product", async (request, response) => {
   try {

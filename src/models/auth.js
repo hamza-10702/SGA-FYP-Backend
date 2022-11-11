@@ -8,7 +8,6 @@ const authSchema = mongoose.Schema(
       type: String,
       rquired: true,
       minlength: 3,
-      unique: [true, "username is already present"],
     },
 
     email: {
@@ -25,14 +24,10 @@ const authSchema = mongoose.Schema(
       type: String,
       rquired: true,
     },
-    token: {
-      type: String,
-      default: ''
-    },
   },
   { timestamps: true }
 );
 
-const Auth = new mongoose.model("Auth", authSchema);
+const userAuthenticationModel = new mongoose.model("Auth", authSchema);
 
-module.exports = Auth;
+module.exports = userAuthenticationModel;

@@ -1,23 +1,25 @@
+require("dotenv").config();
 const express = require("express");
-const cookieParser = require('cookie-parser')
-const AuthRouter = require("./routes/authRouters")
-const productRouter = require("./routes/productRouters")
+const cookieParser = require("cookie-parser");
+const authRouter = require("./routes/authRouters");
+const productRouter = require("./routes/productRouters");
+const imageRouter = require('./routes/imageRouters')
+const connectDB = require("./db/connectDB");
 
 //// Code  ////
-require("./db/conn");
+
 const app = express();
-
-const port = process.env.PORT || 5000;
-
 app.use(express.json());
 app.use(cookieParser());
-app.use(AuthRouter);
-app.use(productRouter);
 
+const port = 3000;
+
+connectDB();
+
+app.use(authRouter);
+app.use(productRouter);
+app.use(imageRouter)
 
 app.listen(port, () => {
-    console.log(`Connection is ${port}`);
-  });
-  
-  
-  
+  console.log(`Connection is ${port}`);
+});
