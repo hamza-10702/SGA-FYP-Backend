@@ -12,8 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const port = 5000;
-// const port = process.env.PORT || 3000;
+// const port = 5000;
+const port = process.env.PORT || 3000;
 const DATABASE_URL = 'mongodb+srv://SaadMalik:saad03212710920@cluster0.124ticf.mongodb.net/fyp-backend?retryWrites=true&w=majority';
 
 connectDB(DATABASE_URL);
