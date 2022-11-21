@@ -4,7 +4,7 @@ const validator = require("validator");
 //// Code  ////
 const authSchema = mongoose.Schema(
   {
-    name: {
+    fullName: {
       type: String,
       rquired: true,
       minlength: 3,

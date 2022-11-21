@@ -8,22 +8,22 @@ const SECRET_KEY = "2hurHRUI34SEqwt45";
 
 class userController {
   static userRegister = async (request, response) => {
-    const { name, email, password, confirmPassword } = request.body;
+    const { fullName, email, password, confirmPassword } = request.body;
     const checkUserEmail = await userAuthenticationModel.findOne({
       email: email,
     });
-    // console.log(name, email, password, confirmPassword);
+    // console.log(fullName, email, password, confirmPassword);
     if (checkUserEmail) {
       console.log(checkUserEmail);
       response.send({ status: "Failed", Message: "Email Already used" });
     } else {
-      if (name && email && password && confirmPassword) {
+      if (fullName && email && password && confirmPassword) {
         if (password === confirmPassword) {
           try {
             const salt = await bcrypt.genSalt(10);
             const hashPassword = await bcrypt.hash(password, salt);
             const userCreate = new userAuthenticationModel({
-              name,
+              fullName,
               email,
               password: hashPassword,
             });
@@ -82,7 +82,7 @@ class userController {
           } else {
             response.status(400).send({
               status: "Failed",
-              Message: "Invalid Username OR Password",
+              Message: "Invalid UserfullName OR Password",
             });
           }
         } else {
@@ -130,7 +130,7 @@ class userController {
   };
 
 
-  static sendResetPassword = async (name, email, token) =>{
+  static sendResetPassword = async (fullName, email, token) =>{
     try {
         const transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
@@ -148,7 +148,7 @@ class userController {
           subject: "For Reset Password",
           html:
             "<p>Hii " +
-            name +
+            fullName +
             ', <a href="http://localhost:5000/reset-password?token=' +
             token +
             '">reset password<a/></p>',
@@ -177,7 +177,7 @@ class userController {
           { email: email },
           { $set: { token: randomString } }
         );
-        sendResetPassword(UserData.name, UserData.email, randomString);
+        sendResetPassword(UserData.fullName, UserData.email, randomString);
         response.status(200).send("Please check your inbox");
       }
     } catch (error) {
